@@ -1,0 +1,22 @@
+export default {
+    black_focus: '#2F2E41',
+    white: '#FFF',
+    black:'#000',
+    blue_bg:'#025AB4',
+    blue_search:"#0094FE",
+    blue_cs:"#286BC7",
+    gray_text:"#B8BFC5",
+    black_text:"#414B5A",
+    white_gray:"#ECEEF0",
+    yellow:"#FFC33A",
+    dot_focus:"#00000040",
+    dot:"#0000001A",
+    purple:"#B620E0",
+    ogran:"#FA6400",
+    gray_search:"#ACACAC1A",
+    border:"#DCDCDC",
+    text:"#00000080",
+    header_title:"#282828",
+    gray_5f:"#5F5F5F",
+    border_check:"#B9B9B9"
+}

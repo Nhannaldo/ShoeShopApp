@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "615422735807",
+    "project_id": "shoeappreactnative",
+    "storage_bucket": "shoeappreactnative.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615422735807:android:6e28d15e206ffdd1491d0a",
+        "android_client_info": {
+          "package_name": "com.clothesapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBphIyxlqiF5AB4-n5ROAOHl74yPQhe4ng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
