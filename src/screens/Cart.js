@@ -18,13 +18,20 @@ export default Cart = ({ navigation, route }) => {
     }
     return name;
   };
+  console.log("sản phẩm bne6 cart:",products)
 
   useEffect(() => {
     const unsubscribe = firestore().collection('Cart').doc(documentId)
       .onSnapshot((snapshot) => {
         if (snapshot.exists) {
           const productData = snapshot.data();
-          const productsArray = Object.entries(productData).map(([productId, productData]) => ({ productId, ...productData }));
+          const productsArray = Object.entries(productData).map(([productId, productData]) => 
+          {
+            return {
+              id: productId,
+              ...productData,
+            };
+          });
           setProducts(productsArray);
           //updateTotalAmount(productData);
         } else {
@@ -39,20 +46,20 @@ export default Cart = ({ navigation, route }) => {
   
 
    // Checkbox
-   const handleCheckboxToggle = (productId, price, quantity) => {
-    const isSelected = selectedItems.includes(productId);
+   const handleCheckboxToggle = (id, price, quantity) => {
+    const isSelected = selectedItems.includes(id);
 
     if (isSelected) {
-      setSelectedItems(selectedItems.filter((item) => item !== productId));
+      setSelectedItems(selectedItems.filter((item) => item !== id));
       setTotalAmount((prevTotal) => prevTotal - price * quantity);
     } else {
-      setSelectedItems([...selectedItems, productId]);
+      setSelectedItems([...selectedItems, id]);
       setTotalAmount((prevTotal) => prevTotal + price * quantity);
     }
   };
   // hàm checkbox tất cả
   const handleSelectAll = () => {
-    const allProductIds = products.map((item) => item.productId);
+    const allProductIds = products.map((item) => item.id);
 
     if (selectedItems.length < allProductIds.length) {
       // Chọn tất cả sản phẩm
@@ -70,7 +77,7 @@ export default Cart = ({ navigation, route }) => {
   const handlePlaceOrder = () => {
     if (selectedItems.length > 0) {
       const selectedProducts = products.filter(item =>
-        selectedItems.includes(item.productId)
+        selectedItems.includes(item.id)
       );
       
       navigation.navigate('CheckOut', { selectedProducts, totalAmount });
@@ -81,7 +88,7 @@ export default Cart = ({ navigation, route }) => {
 
   // Delete
 
-  const handleDeleteProduct = (productId) => {
+  const handleDeleteProduct = (id) => {
     Alert.alert(
       'Xác nhận xóa',
       'Bạn có chắc chắn muốn xóa sản phẩm này không?',
@@ -99,7 +106,7 @@ export default Cart = ({ navigation, route }) => {
   
               // Sử dụng hàm update để cập nhật dữ liệu trong document
               await cartRef.update({
-                [productId]: firestore.FieldValue.delete(),
+                [id]: firestore.FieldValue.delete(),
               });
   
               console.log('Sản phẩm đã được xóa thành công!');
@@ -115,17 +122,17 @@ export default Cart = ({ navigation, route }) => {
 
   // hàm tăng giảm số lượng
 
-  const handleIncrementQuantity = async (productId, price, quantity) => {
+  const handleIncrementQuantity = async (id, price, quantity) => {
     try {
       const cartRef = firestore().collection('Cart').doc(documentId);
   
       // Tăng số lượng sản phẩm trong giỏ hàng
       await cartRef.update({
-        [`${productId}.Quantity`]: firestore.FieldValue.increment(1),
+        [`${id}.Quantity`]: firestore.FieldValue.increment(1),
       });
   
       // Kiểm tra xem sản phẩm đã được chọn trước khi cập nhật tổng số tiền
-      if (selectedItems.includes(productId)) {
+      if (selectedItems.includes(id)) {
         
         setTotalAmount((prevTotall) => prevTotall + price);
         
@@ -137,17 +144,17 @@ export default Cart = ({ navigation, route }) => {
     }
   };
   
-  const handleDecrementQuantity = async (productId, price, quantity) => {
+  const handleDecrementQuantity = async (id, price, quantity) => {
     try {
       const cartRef = firestore().collection('Cart').doc(documentId);
   
       // Giảm số lượng sản phẩm trong giỏ hàng
       await cartRef.update({
-        [`${productId}.Quantity`]: firestore.FieldValue.increment(-1),
+        [`${id}.Quantity`]: firestore.FieldValue.increment(-1),
       });
   
       // Kiểm tra xem sản phẩm đã được chọn trước khi cập nhật tổng số tiền
-      if (selectedItems.includes(productId)) {
+      if (selectedItems.includes(id)) {
         setTotalAmount((prevTotal) => prevTotal - price);
       }
   
@@ -170,8 +177,8 @@ export default Cart = ({ navigation, route }) => {
             <TouchableOpacity onPress={() => navigation.navigate("Details", { item })}>
               <View style={styles.itemContainer}>
               <Checkbox
-                  status={selectedItems.includes(item.productId) ? 'checked' : 'unchecked'}
-                  onPress={() => handleCheckboxToggle(item.productId, item.price, item.Quantity)}
+                  status={selectedItems.includes(item.id) ? 'checked' : 'unchecked'}
+                  onPress={() => handleCheckboxToggle(item.id, item.price, item.Quantity)}
                   style={{marginRight: 50, alignSelf: "center" }}
               />
                 <Image source={{ uri: item.imgProduct }} style={styles.avatar} />
@@ -182,7 +189,7 @@ export default Cart = ({ navigation, route }) => {
                     <View style={styles.quantityButtons}>
                         <TouchableOpacity onPress={() => {
                           if(item.Quantity>1){
-                            handleDecrementQuantity(item.productId, item.price, item.Quantity)
+                            handleDecrementQuantity(item.id, item.price, item.Quantity)
                           }
                           }}>
                             <Icon name="minus" size={15} color="grey" />
@@ -190,7 +197,7 @@ export default Cart = ({ navigation, route }) => {
                         <Text style={{ marginHorizontal: 10, color:'black',fontWeight:'bold' }}>{item.Quantity}</Text>
                         <TouchableOpacity onPress={() => {
                           if(item.Quantity>0){
-                            handleIncrementQuantity(item.productId, item.price, item.Quantity)
+                            handleIncrementQuantity(item.id, item.price, item.Quantity)
                           }
                             
                           }}>
@@ -200,7 +207,7 @@ export default Cart = ({ navigation, route }) => {
                 </View>
                 <TouchableOpacity
                   style={{ position: 'absolute', top: 5, right: 5 }}
-                  onPress={() => handleDeleteProduct(item.productId)}>
+                  onPress={() => handleDeleteProduct(item.id)}>
                   <Icon name="trash" size={20} color="grey" style={{marginRight:5, marginTop:5}}/>
                 </TouchableOpacity>
                 

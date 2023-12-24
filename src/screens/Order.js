@@ -67,7 +67,7 @@ const Order = ({navigation,route }) => {
       </View>
       <FlatList
         data={item.Products}
-        keyExtractor={(product) => product.productId}
+        keyExtractor={(product) => product.id}
         renderItem={({ item: product, index }) => (
             <View style={styles.productItem}>
             <Image source={{ uri: product.imgProduct }} style={styles.productImage} />

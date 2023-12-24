@@ -7,7 +7,9 @@ import firestore from "@react-native-firebase/firestore";
 
 const Review = ({ route, navigation }) => {
   const { orderId, orderData, orderDataProduct } = route.params;
-  console.log(orderDataProduct)
+  console.log('data review product:',orderDataProduct)
+  console.log('data review orderdata:',orderData)
+
   const [controller, dispatch] = useMyContextController();
   const { userLogin, documentId } = controller;
   const [rating, setRating] = useState(5);
@@ -68,7 +70,7 @@ const Review = ({ route, navigation }) => {
   const handleSendReview = async () => {
     try {
       const reviewData = orderDataProduct;
-      const productId = reviewData.productId;
+      const productid = reviewData.id.toString();
       const userId = orderData.userId;
       const username = orderData.userName;
       const dateCreated = new Date().toISOString();
@@ -83,7 +85,7 @@ const Review = ({ route, navigation }) => {
       };
   
       // Tạo tham chiếu đến tài liệu đánh giá
-      const reviewRef = firestore().collection('Review').doc(productId);
+      const reviewRef = firestore().collection('Review').doc(productid);
       const reviewDoc = await reviewRef.get();
   
       if (reviewDoc.exists) {

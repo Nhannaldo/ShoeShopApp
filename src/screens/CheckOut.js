@@ -48,7 +48,7 @@ const CheckOut = ({navigation, route}) => {
           // Xóa các sản phẩm đã thanh toán khỏi collection carts
           const cartRef = firestore().collection("Cart").doc(documentId);
           const updatedCart = products.reduce((cart, item) => {
-              cart[item.productId] = firestore.FieldValue.delete();
+              cart[item.id] = firestore.FieldValue.delete();
               return cart;
           }, {});
           await cartRef.update(updatedCart);
@@ -116,7 +116,7 @@ const CheckOut = ({navigation, route}) => {
         nestedScrollEnabled={true} // enable nested scrolling
         //removeClippedSubviews={false} // prevent clipping content
         data={products}
-        keyExtractor={(item) => item.productId}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={{flexDirection:'row'}}>
             <Image source={{uri:item.imgProduct}} style={{width:100, height:80}}/>
