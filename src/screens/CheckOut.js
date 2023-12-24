@@ -15,7 +15,9 @@ const CheckOut = ({navigation, route}) => {
   const [total, setTotal] = useState(totalAmount + feeShip);
   const [countproduct, setCountProduct] = useState(0);
 
-  console.log("Sản phẩm:", products)
+  console.log("Sản phẩm:", selectedProducts)
+  console.log("Sản phẩm:", totalAmount)
+
   useEffect(() => {
     // Update state with the selected products
     setProducts(selectedProducts);
@@ -47,15 +49,20 @@ const CheckOut = ({navigation, route}) => {
 
           // Xóa các sản phẩm đã thanh toán khỏi collection carts
           const cartRef = firestore().collection("Cart").doc(documentId);
-          const updatedCart = products.reduce((cart, item) => {
+          const cartDoc = await cartRef.get();
+
+          if (cartDoc.exists) {
+            // Tài liệu tồn tại, tiếp tục xử lý
+            const updatedCart = products.reduce((cart, item) => {
               cart[item.id] = firestore.FieldValue.delete();
               return cart;
-          }, {});
-          await cartRef.update(updatedCart);
-          // Cập nhật tổng tiền của giỏ hàng thành 0
-          //await cartRef.update({ totalAmount: 0 });
-          // Chuyển hướng về màn hình thành công hoặc màn hình khác cần thiết
-          console.log('Số lượng sản phẩm đã được giảm thành công!');
+            }, {});
+            await cartRef.update(updatedCart);
+
+            // Các bước xử lý khác
+            console.log('Số lượng sản phẩm đã được giảm thành công!');
+          }
+
           Alert.alert('Thông báo', 'Đặt hàng thành công.Bạn có thể vào đơn hàng để xem chi tiết!');
           navigation.goBack();
       } catch (error) {
@@ -111,25 +118,18 @@ const CheckOut = ({navigation, route}) => {
 
       {/* Product List */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Sản phẩm</Text>
-        <FlatList
-        nestedScrollEnabled={true} // enable nested scrolling
-        //removeClippedSubviews={false} // prevent clipping content
-        data={products}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={{flexDirection:'row'}}>
-            <Image source={{uri:item.imgProduct}} style={{width:100, height:80}}/>
-            <View style={{marginLeft:7}}>
-              <Text style={{ color:'black'}}>{item.ProductName}</Text>
-              <Text style={{paddingVertical:25}}>{`${item.price.toLocaleString('en-US')}đ x ${item.Quantity}`}</Text>
-            </View>
-            
-            {/* Add more details as needed */}
-          </View>
-        )}
-      />
+  <Text style={styles.sectionTitle}>Sản phẩm</Text>
+  {products.map((item) => (
+    <View key={item.id} style={{ flexDirection: 'row' }}>
+      <Image source={{ uri: item.imgProduct }} style={{ width: 100, height: 80 }} />
+      <View style={{ marginLeft: 7 }}>
+        <Text style={{ color: 'black' }}>{item.ProductName}</Text>
+        <Text style={{ paddingVertical: 25 }}>{`${item.price.toLocaleString('en-US')}đ x ${item.Quantity}`}</Text>
       </View>
+      {/* Add more details as needed */}
+    </View>
+  ))}
+</View>
 
       {/* Shipping Method */}
       <View style={styles.section}>

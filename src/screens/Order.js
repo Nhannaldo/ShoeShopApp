@@ -72,8 +72,8 @@ const Order = ({navigation,route }) => {
             <View style={styles.productItem}>
             <Image source={{ uri: product.imgProduct }} style={styles.productImage} />
             <View style={styles.productInfo}>
-              <Text>{product.ProductName}</Text>
-              <Text>{`${product.price.toLocaleString('en-US')}đ x ${product.Quantity}`}</Text>
+              <Text style={{}}>{product.ProductName}</Text>
+              <Text style={{paddingVertical:15}}>{`${product.price.toLocaleString('en-US')}đ x ${product.Quantity}`}</Text>
             </View>
             {item.Status === 'Đã giao' && (
             <TouchableOpacity onPress={() => handleReviewOrder(item.id, item, item.Products[index])}>
@@ -84,7 +84,7 @@ const Order = ({navigation,route }) => {
         )}
       />
       <View style={styles.orderFooter}>
-        <Text style={styles.orderTotal}>{`Tổng cộng: ${item.total.toLocaleString('en-US')}đ`}</Text>
+        <Text style={styles.orderTotal}>Tổng cộng: <Text style={{color:"#ee4d2d"}}>{item.total.toLocaleString('en-US')}đ</Text></Text>
         <Text style={styles.orderStatus}>{item.Status}</Text>
         {item.isCancelable ? (
     <TouchableOpacity onPress={() => handleCancelOrder(item.id)}>
@@ -111,12 +111,9 @@ const Order = ({navigation,route }) => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
+       
           <Text style={styles.headerTextLeft}>Đơn mua</Text>
-        </View>
-        <TouchableOpacity style={styles.headerRight}>
-          <FontAwesomeIcons name="search" size={20} color="black" />
-        </TouchableOpacity>
+        
       </View>
 
       {/* Tabs */}
@@ -135,7 +132,10 @@ const Order = ({navigation,route }) => {
       />
 
       {/* Hiển thị thông báo nếu không có hóa đơn */}
-      {orders.length === 0 && <Text>Không có hóa đơn nào.</Text>}
+      {orders.length === 0 && 
+        <View style={{flex:1, alignItems:"center"}}>
+          <Image source={require('../assets/images/chuacodon.png')}></Image>
+        </View>}
     </View>
   );
 };
@@ -146,16 +146,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   header: {
-    paddingLeft: 20,
-    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 8,
     backgroundColor: "white",
+    marginTop:5
   },
-  headerLeft: {},
   headerTextLeft: {
-    color: "black",
+    color: "red",
     fontSize: 20,
   },
   headerRight: {

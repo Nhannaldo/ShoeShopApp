@@ -18,7 +18,7 @@ export default Cart = ({ navigation, route }) => {
     }
     return name;
   };
-  console.log("sản phẩm bne6 cart:",products)
+  console.log("sản phẩm bên cart:",products)
 
   useEffect(() => {
     const unsubscribe = firestore().collection('Cart').doc(documentId)
@@ -170,7 +170,13 @@ export default Cart = ({ navigation, route }) => {
           <Text style={styles.header_text}>Giỏ hàng</Text>
         </View>
       </View>
-      <FlatList
+
+      {products.length === 0 ? (
+        <View style={{flex:1,alignItems:"center", justifyContent:"center"}}>
+          <Image source={require('../assets/images/giohangtrong.png')} style={{}}/>
+          </View>
+      ):(
+        <FlatList
         data={products}
         renderItem={({ item, index }) => {
           return (
@@ -216,6 +222,12 @@ export default Cart = ({ navigation, route }) => {
           );
         }}
       />
+      )
+
+      }
+      
+
+
       {/* Filter Modal */}
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => handleSelectAll()}>

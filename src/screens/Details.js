@@ -102,14 +102,7 @@ export default Details = ({ navigation, route })=> {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Icon name='arrow-left' size={20} />
                 </TouchableOpacity>
-                <View style={styles.top_bar_right}>
-                    <TouchableOpacity onPress={() => { }}>
-                        <Icon name='heart' size={20} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.share} onPress={() => { }}>
-                        <Icon name='share-alt' size={20} />
-                    </TouchableOpacity>
-                </View>
+                
             </View>
             <View style={styles.item}>
             <Image

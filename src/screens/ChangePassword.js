@@ -6,7 +6,7 @@ import { useMyContextController} from '../context'
 export const ChangePassword = ({navigation, route})=>{
     const [controller, dispatch] = useMyContextController()
     const { userLogin, documentId } = controller;
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(documentId);
     const handleResetPassword = ()=>{
         auth()
                 .sendPasswordResetEmail(email)
@@ -30,9 +30,8 @@ export const ChangePassword = ({navigation, route})=>{
                     
                     <TextInput
                         style={{flex: 1}}
-                        name="email"
                         placeholder="Enter email"
-                        value={documentId}
+                        value={email}
                         onChangeText={text=>setEmail(text)}
                     >
                     </TextInput>
