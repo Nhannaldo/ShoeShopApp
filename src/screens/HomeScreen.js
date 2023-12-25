@@ -47,9 +47,16 @@ const HomeScreen = ({ navigation }) => {
             const productSnapshot = await firestore().collection('Products').get();
             const productData = productSnapshot.docs.map(doc => doc.data());
             // Lọc ra những sản phẩm có id từ 1 đến 5
-            const filteredProductData = productData.filter(product => product.id >= 1 && product.id <= 5);
-            const filteredOrderProductData = productData.filter(product => product.id > 5 && product.id <= 10);
-            setOrderProducts(filteredOrderProductData)
+            const filteredProductData = productData.filter(product => product.id >= 5 && product.id <= 10);
+            const sortedProductData = productData.sort((a, b) => b.Sellnumber - a.Sellnumber);
+
+        // Take the top 5 products
+        const top5ProductsData = sortedProductData.slice(0, 5);
+        
+        // Set the state with the top 5 products
+        setOrderProducts(top5ProductsData);
+            //const filteredOrderProductData = productData.filter(product => product.id > 5 && product.id <= 10);
+            //setOrderProducts(filteredOrderProductData)
             setProducts(filteredProductData);
         };
         fetchProductsData();
@@ -105,7 +112,7 @@ const HomeScreen = ({ navigation }) => {
                 <View style={styles.content_container}>
                     <ListItem title="CATEGORIES" data={categories} type={2} />
                     <ListItem title="SẢN PHẨM MỚI" data={products} style={{ marginTop: 20 }}/>
-                    <ListItem title="SẢN PHẨM ƯU ĐÃI" data={orderproducts} style={{ marginTop: 30 }} />
+                    <ListItem title="SẢN PHẨM BÁN CHẠY" data={orderproducts} style={{ marginTop: 30 }} />
                     <View style={{ height: 50 }} />
                 </View>
             </ScrollView>

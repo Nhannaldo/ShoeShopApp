@@ -79,7 +79,9 @@ export default Cart = ({ navigation, route }) => {
       const selectedProducts = products.filter(item =>
         selectedItems.includes(item.id)
       );
-      
+      // Cập nhật tổng tiền và bỏ chọn tất cả sản phẩm
+    setTotalAmount(0);
+    setSelectedItems([]);
       navigation.navigate('CheckOut', { selectedProducts, totalAmount });
     } else {
       Alert.alert('Thông báo', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');

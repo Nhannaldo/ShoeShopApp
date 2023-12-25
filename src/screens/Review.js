@@ -39,7 +39,7 @@ const Review = ({ route, navigation }) => {
           </View>
           <View style={styles.productDetails}>
             <Text style={styles.productName}>{orderDataProduct.ProductName}</Text>
-            <Text style={styles.productPrice}>{`Giá: ${orderDataProduct.price}đ`}</Text>
+            <Text style={styles.productPrice}>{`Giá: ${orderDataProduct.price.toLocaleString('en-US')}đ`}</Text>
           </View>
         </View>
 
@@ -82,8 +82,13 @@ const Review = ({ route, navigation }) => {
         rating,
         comment,
         dateCreated,
+        ratingtransport,
+        ratingservice
       };
-  
+      if(!comment.trim()){
+        Alert.alert("Vui lòng nhập đầy đủ thông tin!");
+      return;
+      }
       // Tạo tham chiếu đến tài liệu đánh giá
       const reviewRef = firestore().collection('Review').doc(productid);
       const reviewDoc = await reviewRef.get();
@@ -302,6 +307,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 14,
     color: "green",
+    paddingVertical:25
   },
   //input comment
   inputcomment:{

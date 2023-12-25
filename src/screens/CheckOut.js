@@ -43,6 +43,8 @@ const CheckOut = ({navigation, route}) => {
               userAddress: userLogin.address,
               Products: products,
               total,
+              feeShip,
+              totalAmount,
               Status: 'Chờ xác nhận',
               DateCreate: new Date().toISOString(),
           });
@@ -57,10 +59,23 @@ const CheckOut = ({navigation, route}) => {
               cart[item.id] = firestore.FieldValue.delete();
               return cart;
             }, {});
-            await cartRef.update(updatedCart);
-
+          
+            // Cập nhật trạng thái Inventorynumber trong bảng Products
+            const updateProducts = products.reduce((update, item) => {
+              update[item.id] = {
+                Inventorynumber: firestore.FieldValue.increment(-item.Quantity)
+              };
+              return update;
+            }, {});
+          
+            await Promise.all([
+              cartRef.update(updatedCart),
+              //firestore().collection("Products").doc("your_product_id").update(updateProducts),
+              // Thay thế "your_product_id" bằng ID thực tế của sản phẩm cần cập nhật
+            ]);
+          
             // Các bước xử lý khác
-            console.log('Số lượng sản phẩm đã được giảm thành công!');
+            console.log('Số lượng sản phẩm đã được giảm và Inventorynumber đã được cập nhật thành công!');
           }
 
           Alert.alert('Thông báo', 'Đặt hàng thành công.Bạn có thể vào đơn hàng để xem chi tiết!');
@@ -112,7 +127,7 @@ const CheckOut = ({navigation, route}) => {
           placeholder="Số điện thoại"
           keyboardType="numeric"
           value={userLogin.phone}
-          onChangeText={(text) => setShippingInfo({ ...shippingInfo, phoneNumber: text })}
+          
         />
       </View>
 

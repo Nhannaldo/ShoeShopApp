@@ -58,6 +58,7 @@ export default Product = ({ navigation }) => {
     setIsFilterModalVisible(true);
   };
 
+  //hàm sắp xếp tăng giảm
   const handleFilterSelection = (filterOption) => {
     setSelectedFilter(filterOption);
     setIsFilterModalVisible(false);

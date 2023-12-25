@@ -7,20 +7,14 @@ import Colors from '../themes/Colors';
 import firestore from "@react-native-firebase/firestore";
 
 export default Search = ({ navigation, route }) => {
-  const { search } = route.params;
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentCategoryProducts, setCurrentCategoryProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesSnapshot = await firestore().collection('Category').get();
-        const categoriesData = categoriesSnapshot.docs.map(doc => doc.data());
-        setCategories(categoriesData);
-
         const productSnapshot = await firestore().collection('Products').get();
         const productData = productSnapshot.docs.map(doc => doc.data());
         setProducts(productData);
@@ -60,7 +54,7 @@ export default Search = ({ navigation, route }) => {
     }
 
     const lowercaseSearchQuery = searchQuery.toLowerCase();
-
+    //lọc sản phẩm tìm kiếm
     const filteredProducts = products.filter(product =>
       product.ProductName.toLowerCase().includes(lowercaseSearchQuery)
     );
